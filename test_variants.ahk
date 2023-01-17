@@ -1,4 +1,9 @@
 ; select defaultTesting Layout
+^Esc::
+MsgBox, "reloading script"
+Reload
+Return
+
 ^t::
     CoordMode, Mouse, Screen
     MouseMove, 2950, 750
@@ -12,7 +17,11 @@ return
 ; click on every variant
 ^y::
     CoordMode, Mouse, Screen
-    InputBox, CellCount, How many cells?, How many cells? (row has 10)
+    InputBox, CellCount, "How many cells?, How many cells? (row has 10)"
+    if (CellCount < 1 ){
+        MsgBox Error, "Error - CellCount can't be less than 0"
+        return
+    }
      Sleep, 1500
     Click, Left
      Sleep, 500
@@ -29,9 +38,13 @@ return
             MouseMove, arr[index], Y   
              Sleep, 150
             Click, Left
+
             CellCount -= 1
-            if(CellCount = 0)
+            if(CellCount = 0){
+                MsgBox, "procedure ended"
                 return
+            }
+                
         }
         Y := Y+30
     }
@@ -40,6 +53,10 @@ return
 ^!y::
     CoordMode, Mouse, Screen
     InputBox, CellCount, How many cells?, How many cells? (row has 10)
+    if (CellCount < 1 ){
+        MsgBox Error, "Error - CellCount can't be less than 0"
+        return
+    }
      Sleep, 1500
     Click, Left
      Sleep, 500
@@ -54,6 +71,12 @@ return
          Sleep, 150 
         MouseMove, arr[index], Y   
          Sleep, 150
-        Click, Left       
+        Click, Left
+
+        CellCount -= 1
+        if(CellCount = 0){
+            MsgBox, "procedure ended"
+            return
+        }
     }
 Return
