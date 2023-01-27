@@ -1,9 +1,13 @@
+#SingleInstance, Force
+
 ; select defaultTesting Layout
 ^Esc::
-MsgBox, "reloading script"
-Reload
+    MsgBox, reloading test_variants script
+    Reload
 Return
 
+
+; set defaultTesting layout
 ^t::
     CoordMode, Mouse, Screen
     MouseMove, 2950, 750
@@ -17,9 +21,9 @@ return
 ; click on every variant
 ^y::
     CoordMode, Mouse, Screen
-    InputBox, CellCount, "How many cells?, How many cells? (row has 10)"
+    InputBox, CellCount, How many cells?, How many cells? (row has 10)
     if (CellCount < 1 ){
-        MsgBox Error, "Error - CellCount can't be less than 0"
+        MsgBox, Error - CellCount can't be less than 0
         return
     }
      Sleep, 1500
@@ -35,24 +39,26 @@ return
         loop, 10 {
             index += 1
              Sleep, 150 
-            MouseMove, arr[index], Y   
+            
+            MouseMove, arr[index], Y
              Sleep, 150
             Click, Left
 
             CellCount -= 1
             if(CellCount = 0){
-                MsgBox, "procedure ended"
                 return
             }
-                
+            ; MouseGetPos X, Y
         }
         Y := Y+30
     }
 return
 
+
+; click on wider variants
 ^!y::
     CoordMode, Mouse, Screen
-    InputBox, CellCount, How many cells?, How many cells? (row has 10)
+    InputBox, CellCount, How many cells?, How many cells? (row has 4-5)
     if (CellCount < 1 ){
         MsgBox Error, "Error - CellCount can't be less than 0"
         return
@@ -80,3 +86,5 @@ return
         }
     }
 Return
+
+

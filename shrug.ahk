@@ -55,3 +55,25 @@ return
     }
 
 return
+
+:b0:`:standup::
+	if( A_EndChar == ":"){
+		SendInput,	{BS 9}**Artur**{Shift Down}{enter}{Shift Up}
+		SendInput,	Ostatnio:{Shift Down}{enter}{Shift Up}
+		SendInput,	Dziś:{Shift Down}{enter}{Shift Up}
+		SendInput,	{Shift Down}{enter}{Shift Up}**DrMan**{Shift Down}{enter}{Shift Up}
+		SendInput,	Ostatnio:{Shift Down}{enter}{Shift Up}
+		SendInput,	Dziś:{Shift Down}{enter}{Shift Up}
+		SendInput,	{Shift Down}{enter}{Shift Up}**Klima**{Shift Down}{enter}{Shift Up}
+		SendInput,	Ostatnio:{Shift Down}{enter}{Shift Up}
+		SendInput,	Dziś:{Shift Down}{enter}{Shift Up}
+		SendInput,	{Shift Down}{enter}{Shift Up}**Wierzbd**{Shift Down}{enter}{Shift Up}
+		SendInput,	Ostatnio:{Shift Down}{enter}{Shift Up}
+		SendInput,	Dziś:
+	}
+return
+
+^!b::
+	MsgBox, Branch: %setBranch% `nCommit: %setCommit%
+return
+
