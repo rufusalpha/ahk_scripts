@@ -4,6 +4,16 @@ SetWorkingDir, %A_ScriptDir%
 setBranch = ""
 setCommit = ""
 
+varPathToRepoC = C:\HF-Repo\HouseFlipperRelease
+varPathToRepoE = E:\HF-Repo\HouseFlipperRelease
+
+ReadRepository( pathToRepo, byref outputBranch, byref outputCommit ){
+	FileReadLine, temp, %pathToRepo%\.git\HEAD, 1
+	outputBranch := SubStr(temp, 17)
+	FileReadLine, tempCommit, %pathToRepo%\.git\FETCH_HEAD, 1
+	StringLeft, outputCommit, tempCommit, 8
+}
+	
 ; :shrug: ¯\_(ツ)_/¯
 :B0:`:shrug::
 	if (A_EndChar == ":") {
@@ -44,12 +54,28 @@ return
 	}
 return
 
-^b::
-	InputBox, setBranch, Branch name:, Branch name:
-	InputBox, setCommit, Commit hash:, Commit hash: 
-return
+^0::
+	InputBox, setBranch, Branch:, Brnach:
+	InputBox, setCommit, Commit:, Commit: 
+Return
+
+^1::
+	ReadRepository( varPathToRepoC, setBranch, setCommit )
+Return
+
+^2::
+	ReadRepository( varPathToRepoE, setBranch, setCommit )
+Return
 
 :b0:`:branch::
+    if (A_EndCHar == ":") {
+        SendInput, {BS 8}Branch: %setBranch%{Enter}Commit: %setCommit%{Enter}
+    }
+
+return
+
+:b0:`:branchc::
+	ReadRepository( varPathToRepoC, setBranch, setCommit )
     if (A_EndCHar == ":") {
         SendInput, {BS 8}Branch: %setBranch%{Enter}Commit: %setCommit%{Enter}
     }
@@ -77,3 +103,6 @@ return
 	MsgBox, Branch: %setBranch% `nCommit: %setCommit%
 return
 
+^!s::
+	Run, explore "%appdata%/../locallow"
+return
