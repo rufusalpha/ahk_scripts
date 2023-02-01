@@ -103,6 +103,6 @@ return
 	MsgBox, Branch: %setBranch% `nCommit: %setCommit%
 return
 
-^!s::
+^!-::
 	Run, explore "%appdata%/../locallow"
 return
