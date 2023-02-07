@@ -77,7 +77,15 @@ return
 :b0:`:branchc::
 	ReadRepository( varPathToRepoC, setBranch, setCommit )
     if (A_EndCHar == ":") {
-        SendInput, {BS 8}Branch: %setBranch%{Enter}Commit: %setCommit%{Enter}
+        SendInput, {BS 9}Branch: %setBranch%{Enter}Commit: %setCommit%{Enter}
+    }
+
+return
+
+:b0:`:branche::
+	ReadRepository( varPathToRepoE, setBranch, setCommit )
+    if (A_EndCHar == ":") {
+        SendInput, {BS 9}Branch: %setBranch%{Enter}Commit: %setCommit%{Enter}
     }
 
 return
