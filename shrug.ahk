@@ -10,7 +10,7 @@ varPathToRepoE = E:\HF-Repo\HouseFlipperRelease
 ReadRepository( pathToRepo, byref outputBranch, byref outputCommit ){
 	FileReadLine, temp, %pathToRepo%\.git\HEAD, 1
 	outputBranch := SubStr(temp, 17)
-	FileReadLine, tempCommit, %pathToRepo%\.git\FETCH_HEAD, 1
+	FileReadLine, tempCommit, %pathToRepo%\commit_id.git, 1
 	StringLeft, outputCommit, tempCommit, 8
 }
 	
@@ -60,10 +60,12 @@ return
 Return
 
 ^1::
+	RunWait, script.sh c,,hide;
 	ReadRepository( varPathToRepoC, setBranch, setCommit )
 Return
 
 ^2::
+	RunWait, script.sh e,,hide;
 	ReadRepository( varPathToRepoE, setBranch, setCommit )
 Return
 
@@ -75,6 +77,7 @@ Return
 return
 
 :b0:`:branchc::
+	RunWait, script.sh c,,hide;
 	ReadRepository( varPathToRepoC, setBranch, setCommit )
     if (A_EndCHar == ":") {
         SendInput, {BS 9}Branch: %setBranch%{Enter}Commit: %setCommit%{Enter}
@@ -83,6 +86,7 @@ return
 return
 
 :b0:`:branche::
+	RunWait, script.sh e,,hide;
 	ReadRepository( varPathToRepoE, setBranch, setCommit )
     if (A_EndCHar == ":") {
         SendInput, {BS 9}Branch: %setBranch%{Enter}Commit: %setCommit%{Enter}
