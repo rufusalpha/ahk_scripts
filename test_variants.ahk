@@ -2,7 +2,7 @@
 
 ; global variables ;
 
-VarArr := [ 1408, 1440, 1471, 1502, 1533, 1564, 1595, 1626, 1657, 1688 ]
+VarArr := [ 1400, 1433, 1460, 1492, 1523, 1555, 1585, 1616, 1647, 1680 ]
 VarOff := 30
 VarDens := 10
 
@@ -37,7 +37,6 @@ GoThroughVariants:
             if(CellCount = 0){
                 return
             }
-            ; MouseGetPos X, Y
         }
         Y := Y + VarOff
     }
@@ -57,10 +56,10 @@ Return
 ; set defaultTesting layout
 ^t::
     CoordMode, Mouse, Screen
-    MouseMove, 2950, 750
+    MouseMove, 1870, 60
      Sleep, 100
     Click, left
-    MouseMove, 2850, 890
+    MouseMove, 1870, 190
      Sleep, 100
     Click, left
 
@@ -69,7 +68,7 @@ return
 
 ; click on every variant
 ^y::
-    VarArr := [ 1408, 1440, 1471, 1502, 1533, 1564, 1595, 1626, 1657, 1688 ]
+    VarArr := [ 1400, 1433, 1460, 1492, 1523, 1555, 1585, 1616, 1647, 1680 ]
     VarOff := 30
     VarDens := 10
     Gosub, GoThroughVariants
@@ -83,5 +82,3 @@ return
     VarDens := 8
     Gosub, GoThroughVariants
 return
-
-

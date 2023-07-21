@@ -99,6 +99,9 @@ return
 		SendInput,	{BS 9}**Artur**{Shift Down}{enter}{Shift Up}
 		SendInput,	Ostatnio:{Shift Down}{enter}{Shift Up}
 		SendInput,	Dziś:{Shift Down}{enter}{Shift Up}
+		SendInput,	{Shift Down}{enter}{Shift Up}**Bezout**{Shift Down}{enter}{Shift Up}
+		SendInput,	Ostatnio:{Shift Down}{enter}{Shift Up}
+		SendInput,	Dziś:{Shift Down}{enter}{Shift Up}
 		SendInput,	{Shift Down}{enter}{Shift Up}**DrMan**{Shift Down}{enter}{Shift Up}
 		SendInput,	Ostatnio:{Shift Down}{enter}{Shift Up}
 		SendInput,	Dziś:{Shift Down}{enter}{Shift Up}
@@ -117,4 +120,9 @@ return
 
 ^!-::
 	Run, explore "%appdata%/../locallow"
+return
+
+^!=::
+	Run, bash-repo-c.lnk
+	Run, bash-repo-e.lnk
 return

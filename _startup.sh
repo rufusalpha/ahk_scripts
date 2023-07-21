@@ -1,13 +1,12 @@
 #! /bin/bash
 
-#########################################################################
-#  wpisz poniższym arrayu repos ścieżkę bezwzględną w formacie git bash #
-#  będzie ona wyglądać mniej więcej tak jak poniżej						#
-#  		/litera_dysku/folder/HouseFlipperRelease						#
-#  najlepiej wejść w katalog gdzie jest repo, otworzyć git bash,		#
-#  wpisać komendę "pwd" i skopiować w ścieżkę z konsoli					#
-#  WIELKOŚĆ LITER MA ZNACZENIE!!!!!!!									#
-#########################################################################
+#################################################################################
+#		  	please enter your repos direct path in git bash format				#
+#		  	it will look more or less like the one below 						#
+#		  		/drive_letter/some/catalogs/HouseFlipperRelease					#
+#  it's best to go into that catalog, enter 'pwd' command and copy it's result	#
+#  					BASH IS CASE SENSITIVE!!!!!!!!								#
+#################################################################################
 
 repos=(
 	"/c/HF-Repo/HouseFlipperRelease/"
@@ -16,13 +15,19 @@ repos=(
 
 echo "Rufus's Daily Startup Script :) "
 echo ''
-read -n 1 -s -p "press any key to continue . . ."
+read -n 1 -s -p "press any key to continue OR press c to perform cleanup  . . ." varset
 echo ''
 
 for str in ${repos[@]}
 do
 	if cd $str ; then
 		pwd
+		if [ "$varset" = 'c' ] ; then
+			echo "cleaning . . ."
+			git restore .
+			git clean -fd
+		fi
+
 		git status
 		git fetch
 	else
