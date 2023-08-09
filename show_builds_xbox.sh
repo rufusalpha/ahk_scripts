@@ -2,7 +2,6 @@
 
 #setup
 address="";
-things=("a" "b" "c");
 
 #init
 if [ ! -f "output.cfg" ]; then
