@@ -11,7 +11,7 @@ else
 fi
 
 #input
-echo -n "Enter ip address (empty for last: $address): " ;
+echo -n "Enter ip address (empty for default: $address): " ;
 read x;
 
 if [[ $x != "" ]]; then

@@ -47,7 +47,11 @@ if [ $x == "y" ]; then
 	fi
 fi
 
+
+
+
 #ending
+echo $address > output.cfg;
 echo "Script done. . . Press enter to exit";
 read x;
 
