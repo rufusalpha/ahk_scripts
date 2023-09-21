@@ -1,12 +1,13 @@
 #SingleInstance, Force
 CoordMode, Pixel, Screen
-SetKeyDelay, , 100,
+;SetKeyDelay, , 100,
 SendMode, Input
 
 ; global variables ;
 
-RecordingTime := 10000
-RetryDelay := 10000
+RecordingTime := 600000 ; 10 minutes
+RetryDelay := 60000 ; 1 minute
+FormatTime, CurrentDateTime,, dd-MM-yy HH:mm
 
 ; subroutines ;
 
@@ -15,11 +16,13 @@ FindAndClick( ByRef Success, X1, Y1, X2, Y2, image ){
     WinActivate, ahk_exe Discord.exe
     ImageSearch, OutX, OutY, X1, Y1, X2, Y2, %image%
     if (ErrorLevel = 2){
-        MsgBox, 0, Error, Could not conduct the search., 1
+        MsgBox, 0, Error, Could not conduct the search, 1
+        log( "Could not conduct the search" )
         ExitApp
     }
     else if (ErrorLevel = 1){
         ;MsgBox, 0, Error, Icon could not be found on the screen. %image%, 1
+        log( "Icon could not be found on the screen" )
         Success := 0
     }
     else{
@@ -33,6 +36,11 @@ FindAndClick( ByRef Success, X1, Y1, X2, Y2, image ){
         CoordMode, Pixel
         Success := 1
     }
+}
+
+log( string ){
+    FormatTime, CurrentDateTime,, yyyy-MM-dd HH:mm
+    FileAppend, %CurrentDateTime% - %string% `n, Event.log
 }
 
 ; init ;
@@ -55,6 +63,8 @@ WinMaximize ahk_exe obs64.exe
 WinActivate ahk_exe Discord.exe
 WinMaximize ahk_exe Discord.exe
 
+log( "script init" )
+
 MsgBox, 0, INIT, Automatic discord recording script. Looking For Stream, 2
 Sleep, 2000
 
@@ -66,7 +76,8 @@ Loop{
     FindAndClick( Success, 80, 80, 250, 1000, "images\LiveButton.png")
     if (Success){
         MsgBox, 0, Success, Someone is streaming rn :D . Recording now, 3
-        
+        log( "found stream" )
+
         FindAndClick(Stream, 310, 150, 650, 1000, "images\StreamButton.png")
         if (Stream){
             MouseMove, 960, 540
@@ -74,19 +85,24 @@ Loop{
 
             FindAndClick( FullScreen, 1700, 900, 1920, 1080, "images\FullScreenButton.png")
             if (FullScreen){
-                WinShow, ahk_exe obs64.exe
+                
                 Sleep, 200
-                Send, {home}
-
+                Send, {home down}
                 Sleep, 200
+                Send, {home up}
+                Sleep, 200
+                
+                log("recording start")
                 WinShow, ahk_exe Discord.exe
                 Sleep, %RecordingTime%
-
-                WinShow, ahk_exe obs64.exe
-                Sleep, 200
-                Send, {end}
+                log( "recording end" )
 
                 Sleep, 200
+                Send, {end down}
+                Sleep, 200
+                Send, {end up} 
+                Sleep, 200
+
                 WinActivate, ahk_exe Discord.exe
 
                 Sleep, 200
@@ -95,12 +111,14 @@ Loop{
                 Sleep, 200
                 FindAndClick( discon, 930, 950, 1700, 1020, "images\LiveButton.png")
                 if( discon = 0 ){
-                    MsgBox, error disconnection
+                    MsgBox, 0, Error, Error disconnection, 2
+                    log( "Error disconnection" )
                 }
 
             }
             else{
                 MsgBox, 0, Fullscreen, FullScreen Failed, 2
+                log( "FullScreen Failed" )
                 Continue
             }
         }
@@ -111,12 +129,12 @@ Loop{
             Sleep, 200
             FindAndClick( discon, 930, 950, 1700, 1020, "images\LiveButton.png")
                 if( discon = 0 ){
-                    MsgBox, error disconnection
+                    MsgBox, 0, Error, error disconnection, 2
+                    log( "Error disconnection" )
                 }
         }
         
-        MouseClick, Left, 380, 45 ; center cursor
-        
+        MouseClick, Left, 380, 45 ; center cursor        
     }
     else{
         MsgBox, 0, Not Success, No one is streaming rn :(, 3
@@ -125,7 +143,6 @@ Loop{
         WinActivate, ahk_exe Discord.exe
         Sleep, 200
         Send, {esc}
-
         Sleep, %RetryDelay%
     }
 }
@@ -135,7 +152,9 @@ Loop{
 ; emergency stop ctrl+esc
 ^Esc::
     MsgBox, Emergency Exit Combination Pressed
-    WinActivate, ahk_exe obs64.exe
-    Send, {End}
+    Send, {End down}
+    Sleep, 100
+    Send, {End up}
+    log( "force stop")
     ExitApp
 Return
