@@ -1,6 +1,7 @@
 #SingleInstance, Force
 CoordMode, Pixel, Screen
 SetKeyDelay, , 100,
+SendMode, Input
 
 ; global variables ;
 
@@ -73,23 +74,23 @@ Loop{
 
             FindAndClick( FullScreen, 1700, 900, 1920, 1080, "images\FullScreenButton.png")
             if (FullScreen){
-                WinActivate, ahk_exe obs64.exe
+                WinShow, ahk_exe obs64.exe
                 Sleep, 200
-                SendInput, {home}
+                Send, {home}
 
                 Sleep, 200
-                WinActivate, ahk_exe Discord.exe
+                WinShow, ahk_exe Discord.exe
                 Sleep, %RecordingTime%
 
-                WinActivate, ahk_exe obs64.exe
+                WinShow, ahk_exe obs64.exe
                 Sleep, 200
-                SendInput, {end}
+                Send, {end}
 
                 Sleep, 200
                 WinActivate, ahk_exe Discord.exe
 
                 Sleep, 200
-                SendInput, {esc}
+                Send, {esc}
                 MouseMove, 960, 540
                 Sleep, 200
                 FindAndClick( discon, 930, 950, 1700, 1020, "images\LiveButton.png")
@@ -123,7 +124,7 @@ Loop{
 
         WinActivate, ahk_exe Discord.exe
         Sleep, 200
-        SendInput, {esc}
+        Send, {esc}
 
         Sleep, %RetryDelay%
     }
@@ -134,7 +135,7 @@ Loop{
 ; emergency stop ctrl+esc
 ^Esc::
     MsgBox, Emergency Exit Combination Pressed
-    WinActivate ahk_exe obs64.exe
-    SendInput, {End}
+    WinActivate, ahk_exe obs64.exe
+    Send, {End}
     ExitApp
 Return
