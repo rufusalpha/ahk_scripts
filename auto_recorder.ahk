@@ -1,10 +1,11 @@
 #SingleInstance, Force
 CoordMode, Pixel, Screen
+SetKeyDelay, , 100,
 
 ; global variables ;
 
-RecordingTime := 5000
-RetryDelay := 5000
+RecordingTime := 10000
+RetryDelay := 10000
 
 ; subroutines ;
 
@@ -47,11 +48,14 @@ if (ErrorLevel = 0){
     ExitApp
 }
 
+WinActivate ahk_exe obs64.exe
+WinMaximize ahk_exe obs64.exe
+
 WinActivate ahk_exe Discord.exe
 WinMaximize ahk_exe Discord.exe
 
-WinActivate ahk_exe obs64.exe
-WinMaximize ahk_exe obs64.exe
+MsgBox, 0, INIT, Automatic discord recording script. Looking For Stream, 2
+Sleep, 2000
 
 ; MAIN LOOP ;
 
@@ -59,21 +63,68 @@ Loop{
     WinActivate ahk_exe Discord.exe
 
     FindAndClick( Success, 80, 80, 250, 1000, "images\LiveButton.png")
-    if( Success ){
+    if (Success){
         MsgBox, 0, Success, Someone is streaming rn :D . Recording now, 3
+        
+        FindAndClick(Stream, 310, 150, 650, 1000, "images\StreamButton.png")
+        if (Stream){
+            MouseMove, 960, 540
+            Sleep, 200
 
-        MouseMove, 250, 320, 0, R
-        Sleep, 1000
+            FindAndClick( FullScreen, 1700, 900, 1920, 1080, "images\FullScreenButton.png")
+            if (FullScreen){
+                WinActivate, ahk_exe obs64.exe
+                Sleep, 200
+                SendInput, {home}
 
-        ; WinActivate, ahk_exe obs64.exe
-        ; Send, {Home}
-        ; WinActivate, ahk_exe Discord.exe
+                Sleep, 200
+                WinActivate, ahk_exe Discord.exe
+                Sleep, %RecordingTime%
+
+                WinActivate, ahk_exe obs64.exe
+                Sleep, 200
+                SendInput, {end}
+
+                Sleep, 200
+                WinActivate, ahk_exe Discord.exe
+
+                Sleep, 200
+                SendInput, {esc}
+                MouseMove, 960, 540
+                Sleep, 200
+                FindAndClick( discon, 930, 950, 1700, 1020, "images\LiveButton.png")
+                if( discon = 0 ){
+                    MsgBox, error disconnection
+                }
+
+            }
+            else{
+                MsgBox, 0, Fullscreen, FullScreen Failed, 2
+                Continue
+            }
+        }
+        else{
+            MsgBox, 0, Fullscreen, Stream Failed, 2
+
+            MouseMove, 960, 540
+            Sleep, 200
+            FindAndClick( discon, 930, 950, 1700, 1020, "images\LiveButton.png")
+                if( discon = 0 ){
+                    MsgBox, error disconnection
+                }
+        }
+        
         MouseClick, Left, 380, 45 ; center cursor
-        Sleep, %RecordingTime%
+        
     }
     else{
         MsgBox, 0, Not Success, No one is streaming rn :(, 3
         MouseClick, Left, 380, 45 ; center cursor
+
+        WinActivate, ahk_exe Discord.exe
+        Sleep, 200
+        SendInput, {esc}
+
         Sleep, %RetryDelay%
     }
 }
@@ -84,6 +135,6 @@ Loop{
 ^Esc::
     MsgBox, Emergency Exit Combination Pressed
     WinActivate ahk_exe obs64.exe
-    Send, {End}
+    SendInput, {End}
     ExitApp
 Return
