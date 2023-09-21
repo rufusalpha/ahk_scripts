@@ -6,7 +6,7 @@ SendMode, Input
 ; global variables ;
 
 RecordingTime := 600000 ; 10 minutes
-RetryDelay := 60000 ; 1 minute
+RetryDelay := 10000 ; 1 minute
 FormatTime, CurrentDateTime,, dd-MM-yy HH:mm
 
 ; subroutines ;
@@ -22,7 +22,6 @@ FindAndClick( ByRef Success, X1, Y1, X2, Y2, image ){
     }
     else if (ErrorLevel = 1){
         ;MsgBox, 0, Error, Icon could not be found on the screen. %image%, 1
-        log( "Icon could not be found on the screen" )
         Success := 0
     }
     else{
