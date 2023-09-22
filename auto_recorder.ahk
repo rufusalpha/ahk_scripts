@@ -1,13 +1,14 @@
 #SingleInstance, Force
 CoordMode, Pixel, Screen
-;SetKeyDelay, , 100,
 SendMode, Input
+SetDefaultMouseSpeed, 5
 
 ; global variables ;
 
 RecordingTime := 600000 ; 10 minutes
 RetryDelay := 10000 ; 1 minute
 FormatTime, CurrentDateTime,, dd-MM-yy HH:mm
+KeypressTime := 200
 
 ; subroutines ;
 
@@ -28,9 +29,9 @@ FindAndClick( ByRef Success, X1, Y1, X2, Y2, image ){
         ;MsgBox The icon was found at %OutX%x%OutY%. 
         CoordMode, Mouse
         MouseMove, OutX, OutY
-        Sleep, 500
+        Sleep, 350
         Click, Left
-        Sleep, 500
+        Sleep, 350
         
         CoordMode, Pixel
         Success := 1
@@ -38,7 +39,7 @@ FindAndClick( ByRef Success, X1, Y1, X2, Y2, image ){
 }
 
 log( string ){
-    FormatTime, CurrentDateTime,, yyyy-MM-dd HH:mm
+    FormatTime, CurrentDateTime,, yyyy-MM-dd HH:mm:ss
     FileAppend, %CurrentDateTime% - %string% `n, Event.log
 }
 
@@ -65,7 +66,7 @@ WinMaximize ahk_exe Discord.exe
 log( "script init" )
 
 MsgBox, 0, INIT, Automatic discord recording script. Looking For Stream, 2
-Sleep, 2000
+Sleep, 3500
 
 ; MAIN LOOP ;
 
@@ -80,38 +81,39 @@ Loop{
         FindAndClick(Stream, 310, 150, 650, 1000, "images\StreamButton.png")
         if (Stream){
             MouseMove, 960, 540
-            Sleep, 200
+            Sleep, 350
 
             FindAndClick( FullScreen, 1700, 900, 1920, 1080, "images\FullScreenButton.png")
             if (FullScreen){
                 
-                Sleep, 200
+                Sleep, 350
                 Send, {home down}
-                Sleep, 200
+                Sleep, 350
                 Send, {home up}
-                Sleep, 200
+                Sleep, 350
                 
                 log("recording start")
                 WinShow, ahk_exe Discord.exe
                 Sleep, %RecordingTime%
                 log( "recording end" )
 
-                Sleep, 200
+                Sleep, 350
                 Send, {end down}
-                Sleep, 200
+                Sleep, 350
                 Send, {end up} 
-                Sleep, 200
+                Sleep, 350
 
                 WinActivate, ahk_exe Discord.exe
-
-                Sleep, 200
-                Send, {esc}
-                MouseMove, 960, 540
-                Sleep, 200
+				
+				Send, {esc down}
+                Sleep, 350
+                Send, {esc up}
+                MouseMove, 960, 540, 5
+                Sleep, 350
                 FindAndClick( discon, 930, 950, 1700, 1020, "images\LiveButton.png")
                 if( discon = 0 ){
                     MsgBox, 0, Error, Error disconnection, 2
-                    log( "Error disconnection" )
+                    log( "Error disconnection 1" )
                 }
 
             }
@@ -124,12 +126,12 @@ Loop{
         else{
             MsgBox, 0, Fullscreen, Stream Failed, 2
 
-            MouseMove, 960, 540
-            Sleep, 200
+            MouseMove, 960, 540, 5
+            Sleep, 350
             FindAndClick( discon, 930, 950, 1700, 1020, "images\LiveButton.png")
                 if( discon = 0 ){
                     MsgBox, 0, Error, error disconnection, 2
-                    log( "Error disconnection" )
+                    log( "Error disconnection 2" )
                 }
         }
         
@@ -140,8 +142,9 @@ Loop{
         MouseClick, Left, 380, 45 ; center cursor
 
         WinActivate, ahk_exe Discord.exe
-        Sleep, 200
-        Send, {esc}
+		Send, {esc down}
+        Sleep, 350
+        Send, {esc up}
         Sleep, %RetryDelay%
     }
 }
