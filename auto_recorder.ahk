@@ -6,7 +6,7 @@ SetDefaultMouseSpeed, 5
 ; global variables ;
 
 RecordingTime := 600000 ; 10 minutes
-RetryDelay := 10000 ; 1 minute
+RetryDelay := 10000 ; 10 seconds
 FormatTime, CurrentDateTime,, dd-MM-yy HH:mm
 KeypressTime := 200
 
@@ -53,7 +53,7 @@ if (ErrorLevel = 0){
 
 Process, Exist, obs64.exe
 if (ErrorLevel = 0){
-    MsgBox, Discord is not active
+    MsgBox, OBS is not active
     ExitApp
 }
 
