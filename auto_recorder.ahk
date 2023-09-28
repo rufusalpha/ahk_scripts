@@ -108,7 +108,8 @@ Loop{
 				Send, {esc down}
                 Sleep, 350
                 Send, {esc up}
-                MouseMove, 0, 0, 5
+                Sleep, 500
+                MouseMove, 1700, 1020, 5
                 Sleep, 350
                 FindAndClick( discon, 930, 950, 1700, 1020, "images\LiveButton.png")
                 if( discon = 0 ){
