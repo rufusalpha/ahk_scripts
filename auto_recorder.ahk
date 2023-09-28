@@ -112,6 +112,7 @@ Loop{
                 MouseMove, 1700, 1020, 5
                 Sleep, 500
                 FindAndClick( discon, 930, 950, 1700, 1020, "images\LiveButton.png")
+                Click, Left
                 if( discon = 0 ){
                     MsgBox, 0, Error, Error disconnection, 2
                     log( "Error disconnection 1" )
