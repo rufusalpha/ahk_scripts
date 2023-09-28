@@ -28,7 +28,7 @@ FindAndClick( ByRef Success, X1, Y1, X2, Y2, image ){
     else{
         ;MsgBox The icon was found at %OutX%x%OutY%. 
         CoordMode, Mouse
-        MouseMove, OutX, OutY-10
+        MouseMove, OutX, OutY-5
         Sleep, 350
         Click, Left
         Sleep, 350
