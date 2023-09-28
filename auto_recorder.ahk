@@ -5,7 +5,7 @@ SetDefaultMouseSpeed, 5
 
 ; global variables ;
 
-RecordingTime := 600000 ; 10 minutes
+RecordingTime := 6000 ; 10 minutes
 RetryDelay := 10000 ; 10 seconds
 FormatTime, CurrentDateTime,, dd-MM-yy HH:mm
 KeypressTime := 200
@@ -40,7 +40,7 @@ FindAndClick( ByRef Success, X1, Y1, X2, Y2, image ){
 
 log( string ){
     FormatTime, CurrentDateTime,, yyyy-MM-dd HH:mm:ss
-    FileAppend, %CurrentDateTime% - %string% `n, Event.log
+    FileAppend, %CurrentDateTime% - %string% `n, C:\Users\fuchs\Videos\Nagrania_Playtest\Event.log
 }
 
 ; init ;
