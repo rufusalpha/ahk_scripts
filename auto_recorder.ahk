@@ -5,7 +5,7 @@ SetDefaultMouseSpeed, 5
 
 ; global variables ;
 
-RecordingTime := 6000 ; 10 minutes
+RecordingTime := 600000 ; 10 minutes
 RetryDelay := 10000 ; 10 seconds
 FormatTime, CurrentDateTime,, dd-MM-yy HH:mm
 KeypressTime := 200
