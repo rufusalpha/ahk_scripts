@@ -28,7 +28,7 @@ FindAndClick( ByRef Success, X1, Y1, X2, Y2, image ){
     else{
         ;MsgBox The icon was found at %OutX%x%OutY%. 
         CoordMode, Mouse
-        MouseMove, OutX-10, OutY
+        MouseMove, OutX, OutY-10
         Sleep, 350
         Click, Left
         Sleep, 350
@@ -110,7 +110,7 @@ Loop{
                 Send, {esc up}
                 Sleep, 500
                 MouseMove, 1700, 1020, 5
-                Sleep, 350
+                Sleep, 500
                 FindAndClick( discon, 930, 950, 1700, 1020, "images\LiveButton.png")
                 if( discon = 0 ){
                     MsgBox, 0, Error, Error disconnection, 2
