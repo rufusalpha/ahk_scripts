@@ -21,7 +21,7 @@ FindAndClick( ByRef Success, X1, Y1, X2, Y2, image ){
         ExitApp
     }
     else if (ErrorLevel = 1){
-        MsgBox, 0, Error, Icon could not be found on the screen. %image%, 1
+        ; MsgBox, 0, Error, Icon could not be found on the screen. %image%, 1
         Success := 0
     }
     else{
@@ -38,9 +38,17 @@ FindAndClick( ByRef Success, X1, Y1, X2, Y2, image ){
     }
 }
 
+; send string messange into log file with current timestamp
 log( string ){
     FormatTime, CurrentDateTime,, yyyy-MM-dd HH:mm:ss
     FileAppend, %CurrentDateTime% - %string% `n, Event.log
+}
+
+; scroll the input channel down with keypress for RetryDelay amount of CurrentDateTime
+WaitForIt(){
+    SendInput, {Down Down}
+    Sleep, RetryDelay
+    SendInput, {Down Up}
 }
 
 ; init ;
@@ -56,7 +64,7 @@ WinMaximize ahk_exe Discord.exe
 
 log( "script init" )
 
-MsgBox, 0, INIT, Discord midjurney request monitoring script. Looking For Message, 2
+MsgBox, 0, INIT, Discord midjurney request monitoring script. Looking For Messages, 3
 Sleep, 3500
 
 ; MAIN LOOP ;
@@ -66,31 +74,32 @@ Loop{
 
     FindAndClick( Success, 80, 80, 250, 1000, "images\midjourney-input-enabled.png")
     if( Success ){
-        log( "switch to input channel from enabled" ) ; DEBUG LOG - disable before deployment
+        ; log( "switch to input channel from enabled" ) ; DEBUG LOG - disable before deployment
+
+        WaitForIt()
 
         ImageSearch, OutX, OutY, 330, 880, 700, 1000, images\process-button.png
         if (ErrorLevel = 2){
-            MsgBox, 0, Error, Could not conduct the search, 1
             log( "Could not conduct the search - process-button.png" )
+            MsgBox, 0, Error, Could not conduct the search
             ExitApp
         }
-        else if (ErrorLevel = 1){
-            MsgBox, 0, Error, Icon could not be found on the screen. images\process-button.png, 1
-        }
         else{
-            MsgBox, 0, Success, The icon was found at %OutX%x%OutY%. , 1
+            ; MsgBox, 0, Success, The icon was found at %OutX%x%OutY%. , 1
 
             CoordMode, Mouse
             MouseMove, OutX+5, OutY+5
             Sleep, 1000
 
             ImageSearch,,, 330, 880, 700, 1000, images\confirmed-button.png
-            if ( ErrorLevel = 0 ){
-                MsgBox, 0, done,  Already done this command, 1 ; DEBUG LOG - disable before deployment
-                continue
-            }
-            else if ( ErrorLevel = 2 ){
+            if ( ErrorLevel = 2 ){
                 log( "Could not conduct the search - confirmed-button.png" )
+                MsgBox, 0, Error, Could not conduct the search
+                ExitApp
+            }
+            else if ( ErrorLevel = 0 ){
+                ; MsgBox, 0, done,  Already done this command, 1 ; DEBUG LOG - disable before deployment
+                continue
             }
 
             FindAndClick( Success, OutX-10, OutY-10, OutX+100, OutY+30, "images\reaction-button.png")
@@ -105,7 +114,7 @@ Loop{
 
                 FindAndClick( Success, 400, 510, 1660, 950, "images\copy-button.png")
                 if ( Success ){
-                    MsgBox, 0, Copied, Copied ; DEBUG LOG - disable before deployment
+                    ; MsgBox, 0, Copied, Copied ; DEBUG LOG - disable before deployment
                     FindAndClick( Success, 80, 80, 250, 1000, "images\midjourney-output-disabled.png")
                     if( Success = 0 ){
                         FindAndClick( Success, 80, 60, 250, 1000, "images\midjourney-output-messaged.png")
@@ -120,26 +129,23 @@ Loop{
                     SendInput, /imagine{Space}{Ctrl Down}{V Down}{V Up}{Ctrl Up}
                     Sleep, 100
                     SendInput, {Enter}
-                    MsgBox, 0, Pasted, Pasted ; DEBUG LOG - disable before deployment
+                    ; MsgBox, 0, Pasted, Pasted ; DEBUG LOG - disable before deployment
                 }
             }
-            
             CoordMode, Pixel
         }
-
     }
     else{
         FindAndClick( Success, 80, 80, 250, 1000, "images\midjourney-input-disabled.png")
-        log( "switch to input channel from diabled" ) ; DEBUG LOG - disable before deployment
+        ; log( "switch to input channel from diabled" ) ; DEBUG LOG - disable before deployment
     }
-    Sleep, RetryDelay
 }
 
 ; POOL NIAM ;
 
 ; emergency stop ctrl+esc
 ^Esc::
-    MsgBox, Emergency Exit Combination Pressed
+    MsgBox, Emergency Exit Combination Pressed, 2
     log( "force stop")
     ExitApp
 Return
