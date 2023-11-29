@@ -78,7 +78,7 @@ Loop{
 
         WaitForIt()
 
-        ImageSearch, OutX, OutY, 330, 880, 700, 1000, images\process-button.png
+        ImageSearch, OutX, OutY, 330, 900, 700, 1000, images\process-button.png
         if (ErrorLevel = 2){
             log( "Could not conduct the search - process-button.png" )
             MsgBox, 0, Error, Could not conduct the search
@@ -91,19 +91,21 @@ Loop{
             MouseMove, OutX+5, OutY+5
             Sleep, 1000
 
-            ImageSearch,,, 330, 880, 700, 1000, images\confirmed-button.png
+            ImageSearch,,, 330, 900, 700, 1000, images\confirmed-button.png
             if ( ErrorLevel = 2 ){
                 log( "Could not conduct the search - confirmed-button.png" )
                 MsgBox, 0, Error, Could not conduct the search
                 ExitApp
             }
             else if ( ErrorLevel = 0 ){
-                ; MsgBox, 0, done,  Already done this command, 1 ; DEBUG LOG - disable before deployment
+                MsgBox, 0, done,  Already done this command, 1 ; DEBUG LOG - disable before deployment
                 continue
             }
 
             FindAndClick( Success, OutX-10, OutY-10, OutX+100, OutY+30, "images\reaction-button.png")
             if ( Success ){
+                MsgBox, 0, Success, Found Recation - Proceed with copyting, 1
+
                 Sleep, 350
                 MouseMove, OutX+150, OutY-280
                 Click, Left
