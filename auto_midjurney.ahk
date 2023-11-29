@@ -78,7 +78,7 @@ Loop{
     FindAndClick( Success, 80, 80, 250, 1000, "images\midjourney-input-enabled.png")
     if( Success ){
         ; log( "switch to input channel from enabled" ) ; DEBUG LOG - disable before deployment
-
+        CoordMode, Mouse
         WaitForIt()
 
         ImageSearch, OutX, OutY, 330, 900, 700, 1000, images\process-button.png
@@ -107,10 +107,11 @@ Loop{
                 ExitApp
             }
 
-            FindAndClick( Success, OutX-10, OutY-10, OutX+100, OutY+30, "images\reaction-button.png")
-            if ( !Success ) FindAndClick( Success, OutX-10, OutY-10, OutX+100, OutY+30, "images\reaction-button-blackbar.png")
-            if ( Success ){
-                ; MsgBox, 0, Success, Found Recation - Proceed with copyting, 1
+            FindAndClick( Success1, OutX-10, OutY-10, OutX+100, OutY+30, "images\reaction-button.png")
+            FindAndClick( Success2, OutX-10, OutY-10, OutX+100, OutY+30, "images\reaction-button-blackbar.png")
+            if ( Success1 or Success2  ){
+                ; MsgBox, 0, Success, Found Recation - Proceed with copying, 1
+                CoordMode, Mouse
 
                 Sleep, 350
                 MouseMove, OutX+150, OutY-280
@@ -137,6 +138,7 @@ Loop{
                             continue
                         }
                     }
+                    CoordMode, Mouse
                     MouseMove, 390, 985
                     Sleep, 100
                     Click, Left
