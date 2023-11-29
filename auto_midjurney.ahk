@@ -5,7 +5,7 @@ SetDefaultMouseSpeed, 5
 
 ; global variables ;
 
-RetryDelay := 2000                             ; 10 seconds
+RetryDelay := 3000                             ; 10 seconds
 ShortDelay := 200                               ; delay used on kepresses or waiting on time-sensitive functions to execute
 FormatTime, CurrentDateTime,, dd-MM-yy HH:mm    ; store date and time at start of the script
 
@@ -16,16 +16,17 @@ FindAndClick( ByRef Success, X1, Y1, X2, Y2, image ){
     WinActivate, ahk_exe Discord.exe
     ImageSearch, OutX, OutY, X1, Y1, X2, Y2, %image%
     if (ErrorLevel = 2){
-        MsgBox, 0, Error, Could not conduct the search, 1
+        MsgBox, 0, Error, Could not conduct the search, 1 
         log( "Could not conduct the search" )
         ExitApp
     }
     else if (ErrorLevel = 1){
-        ; MsgBox, 0, Error, Icon could not be found on the screen. %image%, 1
+        ; MsgBox, 0, Error, Icon could not be found on the screen. %image%, 1 ; DEBUG LOG - disable before deployment
+        log( image . " Not Found" )
         Success := 0
     }
     else{
-        ; MsgBox, 0, Success, The icon was found at %OutX%x%OutY%. , 1
+        ; MsgBox, 0, Success, The icon was found at %OutX%x%OutY%. %image%, 1 ; DEBUG LOG - disable before deployment
 
         CoordMode, Mouse
         MouseMove, OutX+5, OutY+5
@@ -70,7 +71,9 @@ Sleep, 3500
 ; MAIN LOOP ;
 
 Loop{
+    CoordMode, Pixel
     WinActivate ahk_exe Discord.exe
+    log( "loop start" )
 
     FindAndClick( Success, 80, 80, 250, 1000, "images\midjourney-input-enabled.png")
     if( Success ){
@@ -84,27 +87,30 @@ Loop{
             MsgBox, 0, Error, Could not conduct the search
             ExitApp
         }
-        else{
-            ; MsgBox, 0, Success, The icon was found at %OutX%x%OutY%. , 1
-
-            CoordMode, Mouse
+        else if( ErrorLevel = 0 ){
+            ;MsgBox, 0, Success, The icon was found at %OutX%x%OutY%. process-button.png, 1 ; DEBUG LOG - disable before deployment
             MouseMove, OutX+5, OutY+5
             Sleep, 1000
 
             ImageSearch,,, 330, 900, 700, 1000, images\confirmed-button.png
-            if ( ErrorLevel = 2 ){
-                log( "Could not conduct the search - confirmed-button.png" )
+            if ( ErrorLevel = 0 ){
+                ; MsgBox, 0, done,  Already done this command, 1 ; DEBUG LOG - disable before deployment
+                log( "Already done this command" ) ; DEBUG LOG - disable before deployment
+                continue
+            }
+            else if ( ErrorLevel = 1 ){
+                log( "confirmed-button.png Not Found" ) ; DEBUG LOG - disable before deployment
+            }
+            else if ( ErrorLevel = 2 ){
+                log( "Could not conduct the search - confirmed-button.png" ) 
                 MsgBox, 0, Error, Could not conduct the search
                 ExitApp
             }
-            else if ( ErrorLevel = 0 ){
-                MsgBox, 0, done,  Already done this command, 1 ; DEBUG LOG - disable before deployment
-                continue
-            }
 
             FindAndClick( Success, OutX-10, OutY-10, OutX+100, OutY+30, "images\reaction-button.png")
+            if ( !Success ) FindAndClick( Success, OutX-10, OutY-10, OutX+100, OutY+30, "images\reaction-button-blackbar.png")
             if ( Success ){
-                MsgBox, 0, Success, Found Recation - Proceed with copyting, 1
+                ; MsgBox, 0, Success, Found Recation - Proceed with copyting, 1
 
                 Sleep, 350
                 MouseMove, OutX+150, OutY-280
@@ -116,25 +122,31 @@ Loop{
 
                 FindAndClick( Success, 400, 510, 1660, 950, "images\copy-button.png")
                 if ( Success ){
-                    ; MsgBox, 0, Copied, Copied ; DEBUG LOG - disable before deployment
+                    log( "message copied" ) ; DEBUG LOG - disable before deployment
+
                     FindAndClick( Success, 80, 80, 250, 1000, "images\midjourney-output-disabled.png")
                     if( Success = 0 ){
                         FindAndClick( Success, 80, 60, 250, 1000, "images\midjourney-output-messaged.png")
                         if( Success = 0 ){
-                            log( "couldn't find output channel - abandoning attempt") ; fix it so script wont abandon the prompt, and remove the checkmark if this happens
+                            log( "couldn't find output channel - abandoning attempt") ; DEBUG LOG - disable before deployment
+
+                            FindAndClick(Success, 330, 900, 700, 1000, "images\confirmed-button.png")
+                            if( Success = 0 ){
+                                log( "error - confirmed button" )
+                            }                            
                             continue
                         }
                     }
                     MouseMove, 390, 985
                     Sleep, 100
                     Click, Left
+
                     SendInput, /imagine{Space}{Ctrl Down}{V Down}{V Up}{Ctrl Up}
                     Sleep, 100
                     SendInput, {Enter}
-                    ; MsgBox, 0, Pasted, Pasted ; DEBUG LOG - disable before deployment
+                    log( "message pasted" )
                 }
             }
-            CoordMode, Pixel
         }
     }
     else{
