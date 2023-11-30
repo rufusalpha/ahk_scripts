@@ -3,13 +3,14 @@ CoordMode, Pixel, Screen
 SendMode, Input
 SetDefaultMouseSpeed, 5
 
-; global variables ;
+; GLOBAL VARIABLES ;
 
-RetryDelay := 3000                             ; 10 seconds
-ShortDelay := 200                               ; delay used on kepresses or waiting on time-sensitive functions to execute
+RetryDelay := 4000                              ; main loop delay    
+LongDelay  := 1000                              ; delay used on waiting for longer animations to finish
+ShortDelay := 350                               ; delay used on kepresses or waiting on time-sensitive functions to execute
 FormatTime, CurrentDateTime,, dd-MM-yy HH:mm    ; store date and time at start of the script
 
-; subroutines ;
+; SUBROUTINES ;
 
 ; find image on screen and click it
 FindAndClick( ByRef Success, X1, Y1, X2, Y2, image ){
@@ -17,22 +18,21 @@ FindAndClick( ByRef Success, X1, Y1, X2, Y2, image ){
     ImageSearch, OutX, OutY, X1, Y1, X2, Y2, %image%
     if (ErrorLevel = 2){
         MsgBox, 0, Error, Could not conduct the search, 1 
-        log( "Could not conduct the search" )
+        log( "CRITICAL - Could not conduct the search" ) ; PRODUCTION LOG - DO NOT DISABLE
         ExitApp
     }
     else if (ErrorLevel = 1){
-        ; MsgBox, 0, Error, Icon could not be found on the screen. %image%, 1 ; DEBUG LOG - disable before deployment
-        log( image . " Not Found" )
+        log( "WARNING - Image: " . image . "- Not Found" ) ; PRODUCTION LOG - DO NOT DISABLE
         Success := 0
     }
     else{
-        ; MsgBox, 0, Success, The icon was found at %OutX%x%OutY%. %image%, 1 ; DEBUG LOG - disable before deployment
-
         CoordMode, Mouse
+
         MouseMove, OutX+5, OutY+5
-        Sleep, 350
+        Sleep, %ShortDelay%
+
         Click, Left
-        Sleep, 350
+        Sleep, %ShortDelay%
         
         CoordMode, Pixel
         Success := 1
@@ -48,11 +48,11 @@ log( string ){
 ; scroll the input channel down with keypress for RetryDelay amount of CurrentDateTime
 WaitForIt(){
     SendInput, {Down Down}
-    Sleep, RetryDelay
+    Sleep, %RetryDelay%
     SendInput, {Down Up}
 }
 
-; init ;
+; INIT ;
 
 Process, Exist, Discord.exe
 if (ErrorLevel = 0){
@@ -63,7 +63,7 @@ if (ErrorLevel = 0){
 WinActivate ahk_exe Discord.exe
 WinMaximize ahk_exe Discord.exe
 
-log( "script init" )
+log( "MESSAGE - script init done" ) ; 
 
 MsgBox, 0, INIT, Discord midjurney request monitoring script. Looking For Messages, 3
 Sleep, 3500
@@ -73,7 +73,6 @@ Sleep, 3500
 Loop{
     CoordMode, Pixel
     WinActivate ahk_exe Discord.exe
-    log( "loop start" )
 
     FindAndClick( Success, 80, 80, 250, 1000, "images\midjourney-input-enabled.png")
     if( Success ){
@@ -83,26 +82,27 @@ Loop{
 
         ImageSearch, OutX, OutY, 330, 900, 700, 1000, images\process-button.png
         if (ErrorLevel = 2){
-            log( "Could not conduct the search - process-button.png" )
+            log( "CRITICAL - Could not conduct the search - process-button.png" ) ; PRODUCTION LOG - DO NOT DISABLE
             MsgBox, 0, Error, Could not conduct the search
             ExitApp
         }
         else if( ErrorLevel = 0 ){
-            ;MsgBox, 0, Success, The icon was found at %OutX%x%OutY%. process-button.png, 1 ; DEBUG LOG - disable before deployment
+            ; MsgBox, 0, Success, The icon was found at %OutX%x%OutY%. process-button.png, 1 ; DEBUG LOG - disable before deployment
             MouseMove, OutX+5, OutY+5
-            Sleep, 1000
+            Sleep, %LongDelay%
 
             ImageSearch,,, 330, 900, 700, 1000, images\confirmed-button.png
             if ( ErrorLevel = 0 ){
                 ; MsgBox, 0, done,  Already done this command, 1 ; DEBUG LOG - disable before deployment
-                log( "Already done this command" ) ; DEBUG LOG - disable before deployment
+                log( "FLOW - Already done this command" ) ; PRODUCTION LOG - DO NOT DISABLE
+
                 continue
             }
             else if ( ErrorLevel = 1 ){
-                log( "confirmed-button.png Not Found" ) ; DEBUG LOG - disable before deployment
+                log( "WARNING - Image: confirmed-button.png - Not Found" ) ; DEBUG LOG - disable before deployment
             }
             else if ( ErrorLevel = 2 ){
-                log( "Could not conduct the search - confirmed-button.png" ) 
+                log( "CRITICAL - Could not conduct the search - confirmed-button.png" ) 
                 MsgBox, 0, Error, Could not conduct the search
                 ExitApp
             }
@@ -110,7 +110,7 @@ Loop{
             FindAndClick( Success1, OutX-10, OutY-10, OutX+100, OutY+30, "images\reaction-button.png")
             FindAndClick( Success2, OutX-10, OutY-10, OutX+100, OutY+30, "images\reaction-button-blackbar.png")
             if ( Success1 or Success2  ){
-                ; MsgBox, 0, Success, Found Recation - Proceed with copying, 1
+                log( "PROMPT -  Found new prompt" ) ; PRODUCTION LOG - DO NOT DISABLE
                 CoordMode, Mouse
 
                 Sleep, 350
@@ -123,30 +123,26 @@ Loop{
 
                 FindAndClick( Success, 400, 510, 1660, 950, "images\copy-button.png")
                 if ( Success ){
-                    log( "message copied" ) ; DEBUG LOG - disable before deployment
+                    log( "PROMPT - copied" ) ; PRODUCTION LOG - DO NOT DISABLE
 
                     FindAndClick( Success, 80, 80, 250, 1000, "images\midjourney-output-disabled.png")
                     if( Success = 0 ){
                         FindAndClick( Success, 80, 60, 250, 1000, "images\midjourney-output-messaged.png")
                         if( Success = 0 ){
-                            log( "couldn't find output channel - abandoning attempt") ; DEBUG LOG - disable before deployment
-
-                            FindAndClick(Success, 330, 900, 700, 1000, "images\confirmed-button.png")
-                            if( Success = 0 ){
-                                log( "error - confirmed button" )
-                            }                            
+                            log( "ERROR - couldn't find output channel - abandoning attempt") ; PRODUCTION LOG - DO NOT DISABLE
+                            FindAndClick(Success, 330, 900, 700, 1000, "images\confirmed-button.png")                            
                             continue
                         }
                     }
                     CoordMode, Mouse
                     MouseMove, 390, 985
-                    Sleep, 100
+                    Sleep, %ShortDelay%
                     Click, Left
 
                     SendInput, /imagine{Space}{Ctrl Down}{V Down}{V Up}{Ctrl Up}
-                    Sleep, 100
+                    Sleep, %ShortDelay%
                     SendInput, {Enter}
-                    log( "message pasted" )
+                    log( "PROMPT - Sent successfuly" )
                 }
             }
         }
@@ -162,6 +158,6 @@ Loop{
 ; emergency stop ctrl+esc
 ^Esc::
     MsgBox, Emergency Exit Combination Pressed, 2
-    log( "force stop")
+    log( "MESSAGE - force stop")
     ExitApp
 Return
