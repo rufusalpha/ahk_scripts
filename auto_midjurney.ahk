@@ -18,7 +18,7 @@ FindAndClick( ByRef Success, X1, Y1, X2, Y2, image ){
     ImageSearch, OutX, OutY, X1, Y1, X2, Y2, %image%
     if (ErrorLevel = 2){
         MsgBox, 0, Error, Could not conduct the search, 1 
-        log( "CRITICAL - Could not conduct the search" ) ; PRODUCTION LOG - DO NOT DISABLE
+        log( "CRITICAL - Could not conduct the search - " . image ) ; PRODUCTION LOG - DO NOT DISABLE
         ExitApp
     }
     else if (ErrorLevel = 1){
