@@ -143,7 +143,9 @@ Loop{
                     MouseMove, 390, 985
                     Sleep, %ShortDelay%
                     Click, Left
-
+                    SendInput, prompt{Space}{Ctrl Down}{V Down}{V Up}{Ctrl Up}
+                    Sleep, %ShortDelay%
+                    SendInput, {Enter}
                     SendInput, /imagine{Space}{Ctrl Down}{V Down}{V Up}{Ctrl Up}
                     Sleep, %ShortDelay%
                     SendInput, {Enter}
