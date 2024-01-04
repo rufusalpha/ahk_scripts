@@ -60,17 +60,22 @@ if (ErrorLevel = 0){
     ExitApp
 }
 
+if (FileExist("Event.log") != ""){
+    FileMove, Event.log, Event.prev, 1    
+}
+
 WinActivate ahk_exe Discord.exe
 WinMaximize ahk_exe Discord.exe
 
 log( "MESSAGE - script init done" ) ; 
 
 MsgBox, 0, INIT, Discord midjurney request monitoring script. Looking For Messages, 3
-Sleep, 3500
+Sleep, %RetryDelay%
 
 ; MAIN LOOP ;
 
 Loop{
+    Sleep, %LongDelay%
     CoordMode, Pixel
     WinActivate ahk_exe Discord.exe
 
@@ -113,12 +118,12 @@ Loop{
                 log( "PROMPT -  Found new prompt" ) ; PRODUCTION LOG - DO NOT DISABLE
                 CoordMode, Mouse
 
-                Sleep, 350
+                Sleep, %ShortDelay%
                 MouseMove, OutX+150, OutY-280
                 Click, Left
 
                 MouseMove, OutX+100, OutY-20
-                Sleep, 100
+                Sleep, %ShortDelay%
                 Click, Right
 
                 FindAndClick( Success, 400, 510, 1660, 950, "images\copy-button.png")
