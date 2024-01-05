@@ -115,6 +115,8 @@ SearchVersionAndUpscale( image_unticked, image_button ){
 
                 FindAndClick( Success, 310, 460, 850, 960, image_button ) ; search lower part of a screen for version/upscale buttons
                 if( Success ){
+                    Sleep, %LongDelay%
+                    MouseClick, Left
                     log( "PROMPT - upscale/version reaction sent successfuly" )
                     break
                 }
