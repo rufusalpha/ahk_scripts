@@ -1,7 +1,7 @@
-# ahk_scripts
+## ahk_scripts
 ahk_scripts for work
-
-TODO
-- Bot - DONE
-- Personal prompts
-- Upscale/Versions
+# auto_midjurney script
+### TODO
+- [x] Bot core functionality
+- [ ] Personal prompts
+- [ ] Upscale/Versions in progress
