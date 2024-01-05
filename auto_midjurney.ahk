@@ -6,8 +6,8 @@ SetDefaultMouseSpeed, 5
 ; GLOBAL VARIABLES ;
 
 RetryDelay := 4000                              ; main loop delay    
-LongDelay  := 1000                              ; delay used on waiting for longer animations to finish
-ShortDelay := 500                               ; delay used on kepresses or waiting on time-sensitive functions to execute
+LongDelay  := 2000                              ; delay used on waiting for longer animations to finish
+ShortDelay := 1000                              ; delay used on kepresses or waiting on time-sensitive functions to execute
 FormatTime, CurrentDateTime,, dd-MM-yy HH:mm    ; store date and time at start of the script
 
 ; SUBROUTINES ;
@@ -55,8 +55,8 @@ WaitForIt(){
 ; try and find templates for upscaling/version generation area 480 70 1470 950
 SearchVersionAndUpscale( image_unticked, image_button ){
     WinActivate, ahk_exe Discord.exe
-    FindAndClick( Success, 480, 70, 1470, 950, image_unticked )
-    if( Success ){
+    FindAndClick( Success, 480, 70, 1470, 1000, image_unticked )
+    if( Success = 1 ){
         CoordMode, Mouse
         MouseGetPos, OutX, OutY
 
@@ -83,9 +83,12 @@ SearchVersionAndUpscale( image_unticked, image_button ){
             }
             CoordMode, Mouse
 
-            SendInput, {Ctrl Down}{F Down}
+            Sleep, %LongDelay%
+            MouseMove, 1690, 45
             Sleep, %ShortDelay%
-            SendInput, od:andrzej99{space}{Ctrl Down}{V Down}{V Up}{Ctrl Up}
+            MouseClick, Left
+
+            SendInput, w:midjourney-output{space}od:andrzej99{space}prompt{space}{Ctrl Down}{V Down}{V Up}{Ctrl Up}
             Sleep, %ShortDelay%
             SendInput, {Enter} 
 
@@ -102,7 +105,7 @@ SearchVersionAndUpscale( image_unticked, image_button ){
             Sleep, %ShortDelay%
             Index := 0
             Loop, 5{
-                log( "PROMPT - loop itteration " . %A_Index% ) ; DEBUG LOG - disable before deployment
+                log( "PROMPT - loop iteration" ) ; DEBUG LOG - disable before deployment
                 Index := %Index% + 1
                 SendInput, {Down down}{Down up}
                 Sleep, %ShortDelay%
