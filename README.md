@@ -4,4 +4,4 @@ ahk_scripts for work
 ### TODO
 - [x] Bot core functionality
 - [ ] Personal prompts
-- [ ] Upscale/Versions in progress
+- [ ] Upscale/Versions [in progress]
