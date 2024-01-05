@@ -232,7 +232,7 @@ Loop{
         ; log( "switch to input channel from diabled" ) ; DEBUG LOG - disable before deployment
     }
 
-    SearchVersionAndUpscale("upscale-unticked-1.png", "buttons-upscale-1.png")
+    SearchVersionAndUpscale("images\upscale-unticked-1.png", "images\buttons-upscale-1.png")
     ; SearchVersionAndUpscale("upscale-unticked-2.png", "buttons-upscale-2.png")
     ; SearchVersionAndUpscale("upscale-unticked-3.png", "buttons-upscale-3.png")
     ; SearchVersionAndUpscale("upscale-unticked-4.png", "buttons-upscale-4.png")
