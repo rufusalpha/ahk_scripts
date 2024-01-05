@@ -55,7 +55,7 @@ WaitForIt(){
 ; try and find templates for upscaling/version generation area 480 70 1470 950
 SearchVersionAndUpscale( image_unticked, image_button ){
     WinActivate, ahk_exe Discord.exe
-    FindAndClick( Success, 480, 70, 1470, 950, %image_unticked% )
+    FindAndClick( Success, 480, 70, 1470, 950, image_unticked )
     if( Success ){
         CoordMode, Mouse
         MouseGetPos, OutX, OutY
@@ -102,7 +102,7 @@ SearchVersionAndUpscale( image_unticked, image_button ){
             Sleep, %ShortDelay%
 
             Loop, 5{
-                log( "PROMPT - loop itteration %A_Index%" ) ; DEBUG LOG - remove before deployment
+                log( "PROMPT - loop itteration ". %A_Index% ) ; DEBUG LOG - remove before deployment
 
                 SendInput, {Down down}{Down up}
                 Sleep, %ShortDelay%
@@ -111,7 +111,7 @@ SearchVersionAndUpscale( image_unticked, image_button ){
                 SendInput, {Down down}{Down up}
                 Sleep, %ShortDelay%
 
-                FindAndClick( Success, 310, 460, 850, 960, %image_button% ) ; search lower part of a screen for version/upscale buttons
+                FindAndClick( Success, 310, 460, 850, 960, image_button ) ; search lower part of a screen for version/upscale buttons
                 if( Success ){
                     break
                 }
