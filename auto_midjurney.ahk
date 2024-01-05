@@ -7,7 +7,7 @@ SetDefaultMouseSpeed, 5
 
 RetryDelay := 4000                              ; main loop delay    
 LongDelay  := 1000                              ; delay used on waiting for longer animations to finish
-ShortDelay := 350                               ; delay used on kepresses or waiting on time-sensitive functions to execute
+ShortDelay := 500                               ; delay used on kepresses or waiting on time-sensitive functions to execute
 FormatTime, CurrentDateTime,, dd-MM-yy HH:mm    ; store date and time at start of the script
 
 ; SUBROUTINES ;
@@ -22,7 +22,7 @@ FindAndClick( ByRef Success, X1, Y1, X2, Y2, image ){
         ExitApp
     }
     else if (ErrorLevel = 1){
-        log( "WARNING - Image: " . image . "- Not Found" ) ; PRODUCTION LOG - DO NOT DISABLE
+        log( "WARNING - Image: " . image . "- Not Found" ) ; DEBUG LOG - disable before deployment
         Success := 0
     }
     else{
@@ -83,7 +83,7 @@ SearchVersionAndUpscale( image_unticked, image_button ){
             }
             CoordMode, Mouse
 
-            SendInput, {Ctrl Down}{F Down}{F Up}{Ctrl Up}{Space}
+            SendInput, {Ctrl Down}{F Down}
             Sleep, %ShortDelay%
             SendInput, od:andrzej99{space}{Ctrl Down}{V Down}{V Up}{Ctrl Up}
             Sleep, %ShortDelay%
@@ -100,10 +100,10 @@ SearchVersionAndUpscale( image_unticked, image_button ){
             MouseMove, 1200, 520
             MouseClick, Left
             Sleep, %ShortDelay%
-
+            Index := 0
             Loop, 5{
-                log( "PROMPT - loop itteration " . %A_Index% ) ; DEBUG LOG - remove before deployment
-
+                log( "PROMPT - loop itteration " . %A_Index% ) ; DEBUG LOG - disable before deployment
+                Index := %Index% + 1
                 SendInput, {Down down}{Down up}
                 Sleep, %ShortDelay%
                 SendInput, {Down down}{Down up}
@@ -113,12 +113,13 @@ SearchVersionAndUpscale( image_unticked, image_button ){
 
                 FindAndClick( Success, 310, 460, 850, 960, image_button ) ; search lower part of a screen for version/upscale buttons
                 if( Success ){
+                    log( "PROMPT - upscale/version reaction sent successfuly" )
                     break
                 }
             }
-
-            log( "PROMPT - upscale/version reaction sent successfuly" )
+            
             MsgBox, stopped at searching for button
+            log( "PROMPT - upscale/version procedure end" )
         }
     }
 }
@@ -224,7 +225,6 @@ Loop{
                     log( "PROMPT - Sent successfuly" )
                 }
             }
-            
         }
     }
     else{
