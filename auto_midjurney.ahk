@@ -233,9 +233,9 @@ Loop{
     }
 
     SearchVersionAndUpscale("images\upscale-unticked-1.png", "images\buttons-upscale-1.png")
-    ; SearchVersionAndUpscale("upscale-unticked-2.png", "buttons-upscale-2.png")
-    ; SearchVersionAndUpscale("upscale-unticked-3.png", "buttons-upscale-3.png")
-    ; SearchVersionAndUpscale("upscale-unticked-4.png", "buttons-upscale-4.png")
+    ; SearchVersionAndUpscale("images\upscale-unticked-2.png", "images\buttons-upscale-2.png")
+    ; SearchVersionAndUpscale("images\upscale-unticked-3.png", "images\buttons-upscale-3.png")
+    ; SearchVersionAndUpscale("images\upscale-unticked-4.png", "images\buttons-upscale-4.png")
 }
 
 ; POOL NIAM ;
