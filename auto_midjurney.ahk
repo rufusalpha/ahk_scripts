@@ -107,11 +107,10 @@ SearchVersionAndUpscale( image_unticked, image_button ){
             Loop, 5{
                 log( "PROMPT - loop iteration" ) ; DEBUG LOG - disable before deployment
                 Index := %Index% + 1
-                SendInput, {Down down}{Down up}
+                SendInput, {Down down}
                 Sleep, %ShortDelay%
-                SendInput, {Down down}{Down up}
-                Sleep, %ShortDelay%
-                SendInput, {Down down}{Down up}
+                SendInput, {Down up}
+                
                 Sleep, %ShortDelay%
 
                 FindAndClick( Success, 310, 460, 850, 960, image_button ) ; search lower part of a screen for version/upscale buttons
