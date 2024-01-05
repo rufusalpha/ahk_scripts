@@ -18,7 +18,7 @@ FindAndClick( ByRef Success, X1, Y1, X2, Y2, image ){
     ImageSearch, OutX, OutY, X1, Y1, X2, Y2, %image%
     if (ErrorLevel = 2){
         MsgBox, 0, Error, Could not conduct the search, 1 
-        log( "CRITICAL - Could not conduct the search - " . image ) ; PRODUCTION LOG - DO NOT DISABLE
+        log( "CRITICAL - FindAndClick - Could not conduct the search - " . image ) ; PRODUCTION LOG - DO NOT DISABLE
         ExitApp
     }
     else if (ErrorLevel = 1){
@@ -50,6 +50,57 @@ WaitForIt(){
     SendInput, {Down Down}
     Sleep, %RetryDelay%
     SendInput, {Down Up}
+}
+
+; try and find templates for upscaling/version generation area 480 70 1470 950
+SearchVersionAndUpscale( image_ticked, image_unticked, image_button ){
+    WinActivate, ahk_exe Discord.exe
+    ImageSearch, OutX, OutY, 480, 70, 1470, 950, %image_unticked%
+    if (ErrorLevel = 2){
+        MsgBox, 0, Error, Could not conduct the search, 1 
+        log( "CRITICAL - SearchVersionAndUpscale - Could not conduct the search - " . image_unticked ) ; PRODUCTION LOG - DO NOT DISABLE
+        ExitApp
+    }
+    else if (ErrorLevel = 1){
+        log( "WARNING - Image: " . image_unticked . "- Not Found" ) ; PRODUCTION LOG - DO NOT DISABLE
+        Success := 0
+    }
+    else{
+        CoordMode, Mouse
+
+        Sleep, %ShortDelay%
+        MouseMove, OutX+150, OutY-280
+        Click, Left
+
+        MouseMove, OutX+100, OutY-20
+        Sleep, %ShortDelay%
+        Click, Right
+
+        FindAndClick( Success, 400, 510, 1660, 950, "images\copy-button.png")
+        if ( Success ){
+            log( "PROMPT - upscale/version procedure in progress"  ) ; PRODUCTION LOG - DO NOT DISABLE
+
+            FindAndClick( Success, 80, 80, 250, 1000, "images\midjourney-output-disabled.png")
+            if( Success = 0 ){
+                FindAndClick( Success, 80, 60, 250, 1000, "images\midjourney-output-messaged.png")
+                if( Success = 0 ){
+                    log( "ERROR - couldn't find output channel - abandoning attempt") ; PRODUCTION LOG - DO NOT DISABLE
+                    FindAndClick(Success, 330, 900, 700, 1000, "images\confirmed-button.png")                            
+                    continue
+                }
+            }
+            CoordMode, Mouse
+
+            SendInput, {Ctrl Down}{F Down}{F Up}{Ctrl Up}{Space}
+            Sleep, %ShortDelay%
+            SendInput, od:andrzej99{space}{Ctrl Down}{V Down}{V Up}{Ctrl Up}
+            Sleep, %ShortDelay%
+            SendInput, {Enter}
+
+            log( "PROMPT - upscale/version reaction sent successfuly" )
+            MsgBox, stopped at searching for button
+        }
+    }
 }
 
 ; INIT ;
@@ -146,12 +197,14 @@ Loop{
                     SendInput, prompt{Space}{Ctrl Down}{V Down}{V Up}{Ctrl Up}
                     Sleep, %ShortDelay%
                     SendInput, {Enter}
+                    Sleep, %ShortDelay%
                     SendInput, /imagine{Space}{Ctrl Down}{V Down}{V Up}{Ctrl Up}
                     Sleep, %ShortDelay%
                     SendInput, {Enter}
                     log( "PROMPT - Sent successfuly" )
                 }
             }
+            
         }
     }
     else{
