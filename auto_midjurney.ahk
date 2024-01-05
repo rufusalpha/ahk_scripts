@@ -102,7 +102,7 @@ SearchVersionAndUpscale( image_unticked, image_button ){
             Sleep, %ShortDelay%
 
             Loop, 5{
-                log( "PROMPT - loop itteration ". %A_Index% ) ; DEBUG LOG - remove before deployment
+                log( "PROMPT - loop itteration " . %A_Index% ) ; DEBUG LOG - remove before deployment
 
                 SendInput, {Down down}{Down up}
                 Sleep, %ShortDelay%
