@@ -53,26 +53,18 @@ WaitForIt(){
 }
 
 ; try and find templates for upscaling/version generation area 480 70 1470 950
-SearchVersionAndUpscale( image_ticked, image_unticked, image_button ){
+SearchVersionAndUpscale( image_unticked, image_button ){
     WinActivate, ahk_exe Discord.exe
-    ImageSearch, OutX, OutY, 480, 70, 1470, 950, %image_unticked%
-    if (ErrorLevel = 2){
-        MsgBox, 0, Error, Could not conduct the search, 1 
-        log( "CRITICAL - SearchVersionAndUpscale - Could not conduct the search - " . image_unticked ) ; PRODUCTION LOG - DO NOT DISABLE
-        ExitApp
-    }
-    else if (ErrorLevel = 1){
-        log( "WARNING - Image: " . image_unticked . "- Not Found" ) ; PRODUCTION LOG - DO NOT DISABLE
-        Success := 0
-    }
-    else{
+    FindAndClick( Success, 480, 70, 1470, 950, %image_unticked% )
+    if( Success ){
         CoordMode, Mouse
+        MouseGetPos, OutX, OutY
 
         Sleep, %ShortDelay%
-        MouseMove, OutX+150, OutY-280
+        MouseMove, OutX+145, OutY-285
         Click, Left
 
-        MouseMove, OutX+100, OutY-20
+        MouseMove, OutX+95, OutY-25
         Sleep, %ShortDelay%
         Click, Right
 
@@ -86,7 +78,7 @@ SearchVersionAndUpscale( image_ticked, image_unticked, image_button ){
                 if( Success = 0 ){
                     log( "ERROR - couldn't find output channel - abandoning attempt") ; PRODUCTION LOG - DO NOT DISABLE
                     FindAndClick(Success, 330, 900, 700, 1000, "images\confirmed-button.png")                            
-                    continue
+                    return
                 }
             }
             CoordMode, Mouse
@@ -95,7 +87,35 @@ SearchVersionAndUpscale( image_ticked, image_unticked, image_button ){
             Sleep, %ShortDelay%
             SendInput, od:andrzej99{space}{Ctrl Down}{V Down}{V Up}{Ctrl Up}
             Sleep, %ShortDelay%
-            SendInput, {Enter}
+            SendInput, {Enter} 
+
+            Sleep, %LongDelay%
+            MouseMove, 1555, 200
+            Sleep, %ShortDelay%
+            MouseClick, Left
+
+            SendInput, {esc}
+            Sleep, %ShortDelay%
+
+            MouseMove, 1200, 520
+            MouseClick, Left
+            Sleep, %ShortDelay%
+
+            Loop, 5{
+                log( "PROMPT - loop itteration %A_Index%" ) ; DEBUG LOG - remove before deployment
+
+                SendInput, {Down down}{Down up}
+                Sleep, %ShortDelay%
+                SendInput, {Down down}{Down up}
+                Sleep, %ShortDelay%
+                SendInput, {Down down}{Down up}
+                Sleep, %ShortDelay%
+
+                FindAndClick( Success, 310, 460, 850, 960, %image_button% ) ; search lower part of a screen for version/upscale buttons
+                if( Success ){
+                    break
+                }
+            }
 
             log( "PROMPT - upscale/version reaction sent successfuly" )
             MsgBox, stopped at searching for button
@@ -211,13 +231,18 @@ Loop{
         FindAndClick( Success, 80, 80, 250, 1000, "images\midjourney-input-disabled.png")
         ; log( "switch to input channel from diabled" ) ; DEBUG LOG - disable before deployment
     }
+
+    SearchVersionAndUpscale("upscale-unticked-1.png", "buttons-upscale-1.png")
+    ; SearchVersionAndUpscale("upscale-unticked-2.png", "buttons-upscale-2.png")
+    ; SearchVersionAndUpscale("upscale-unticked-3.png", "buttons-upscale-3.png")
+    ; SearchVersionAndUpscale("upscale-unticked-4.png", "buttons-upscale-4.png")
 }
 
 ; POOL NIAM ;
 
 ; emergency stop ctrl+esc
 ^Esc::
-    MsgBox, Emergency Exit Combination Pressed, 2
+    MsgBox, 0, EXIT, Emergency Exit Combination Pressed, 2
     log( "MESSAGE - force stop")
     ExitApp
 Return
